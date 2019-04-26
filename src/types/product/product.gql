@@ -1,3 +1,4 @@
+# Enum are Hard coded values must be one of these
 enum ProductType {
   GAMING_PC
   BIKE
@@ -9,4 +10,48 @@ enum BikeType {
   MOUNTAIN
   ELECTRIC
   BEACH
+}
+
+type Product {
+  name: String!
+  price: Float!
+  image: String!
+  type: ProductType!
+  description: String
+  liquidCooled: Boolean
+  bikeType: BikeType
+  range: String
+  createdBy: User!
+}
+
+input NewProductInput {
+  name: String!
+  price: Float!
+  image: String!
+  type: ProductType!
+  description: String
+  liquidCooled: Boolean
+  bikeType: BikeType
+  range: String
+}
+
+input UpdateProductInput {
+  name: String
+  price: String
+  image: String
+  description: String
+  liquidCooled: Boolean
+  bikeType: BikeType
+  range: String
+}
+
+extend type Query {
+  product(id: ID!): Product!
+  products: [Product]!
+}
+
+extend type Mutation {
+  newProduct(input: NewProductInput): Product!
+  updateProduct(id: ID!, input: UpdateProductInput!): Product!
+  removeProduct(id: ID!): Product!
 }
