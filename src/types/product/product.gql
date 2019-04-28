@@ -11,16 +11,45 @@ enum BikeType {
   BEACH
 }
 
-type Product {
+interface Product {
   name: String!
   price: Float!
   image: String!
-  type: ProductType!
   createdBy: User!
   description: String
-  liquidCooled: Boolean
   range: String
   bikeType: BikeType
+  type: String!
+}
+
+type GamingPc implements Product {
+  name: String!
+  price: Float!
+  image: String!
+  createdBy: User!
+  description: String
+  type: String!
+  liquidCooled: Boolean!
+}
+
+type Bike implements Product {
+  name: String!
+  price: Float!
+  image: String!
+  createdBy: User!
+  description: String
+  type: String!
+  bikeType: BikeType!
+}
+
+type Drone implements Product {
+  name: String!
+  price: Float!
+  image: String!
+  createdBy: User!
+  description: String
+  type: String!
+  range: String!
 }
 
 input NewProductInput {
@@ -43,7 +72,6 @@ input UpdateProductInput {
   bikeType: BikeType
   range: String
 }
-
 
 extend type Query {
   products: [Product]!
