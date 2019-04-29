@@ -11,34 +11,55 @@ const productsTypeMatcher = {
 
 /** product */
 const product = (_, args, ctx) => {
-  return Product.findById(args.id)
-    .lean()
-    .exec()
+  if (ctx.user) {
+    return Product.findById(args.id)
+      .lean()
+      .exec()
+  } else {
+    throw new AuthenticationError()
+  }
 }
 
 const newProduct = (_, args, ctx) => {
-  // use this fake ID for createdBy for now until we talk auth
-  const createdBy = mongoose.Types.ObjectId()
-  return Product.create({ ...args.input, createdBy })
+  if (ctx.user && ctx.user.role === roles.admin) {
+    // use this fake ID for createdBy for now until we talk auth
+    // const createdBy = mongoose.Types.ObjectId()
+    return Product.create({ ...args.input, createdBy: ctx.user._id })
+  } else {
+    throw new AuthenticationError()
+  }
 }
 
 const products = (_, args, ctx) => {
-  return Product.find({})
-    .lean()
-    .exec()
+  if (ctx.user) {
+    return Product.find({})
+      .lean()
+      .exec()
+  } else {
+    throw new AuthenticationError()
+  }
 }
 
 const updateProduct = (_, args, ctx) => {
   const update = args.input
-  return Product.findByIdAndUpdate(args.id, update, { new: true })
-    .lean()
-    .exec()
+
+  if (ctx.user && ctx.user.role === roles.admin) {
+    return Product.findByIdAndUpdate(args.id, update, { new: true })
+      .lean()
+      .exec()
+  } else {
+    throw new AuthenticationError()
+  }
 }
 
 const removeProduct = (_, args, ctx) => {
-  return Product.findByIdAndRemove(args.id)
-    .lean()
-    .exec()
+  if (ctx.user && ctx.user.role === roles.admin) {
+    return Product.findByIdAndRemove(args.id)
+      .lean()
+      .exec()
+  } else {
+    throw new AuthenticationError()
+  }
 }
 
 export default {
